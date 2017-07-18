@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link type="text/css" rel="stylesheet" href="stylesheets/font-awesome.css" />
+    <link type="text/css" rel="stylesheet" href="stylesheets/modal.css" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+    <script>
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <link type="text/css" rel="stylesheet" href="stylesheets/reset.css">
+    <link type="text/css" rel="stylesheet" href="stylesheets/main.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+
+    <meta property="og:url"           content="https://seenergornallwedding.com/" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Jason and Chelsea Are getting married!" />
+    <meta property="og:image"         content="https://seenergornallwedding.com/pics/43606007c89472238d950d49d0fa05096daef57f.jpg" />
+    <meta property="og:description"   content="Welcome to our wedding website!" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" ccontent="https://seenergornallwedding.com/" />
+    <meta name="twitter:title" content="Jason and Chelsea Are getting married!" />
+    <meta name="twitter:image" content="https://seenergornallwedding.com/pics/43606007c89472238d950d49d0fa05096daef57f.jpg" />
+    <meta name="twitter:description" content="Welcome to our wedding website!" />
+
+    <link href='https://fonts.googleapis.com/css?family=Cookie' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="libs/teacup.js"></script>
+    <script src="libs/teacup-config.js"></script>
+    <script src="libs/async.min.js"></script>
+    <script src="libs/url.min.js"></script>
+    <script src="libs/jquery.history.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+    <script type="text/javascript">
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAo6YZNFNf0T3n_NtlZvz04NROyC06UIv0",
+        authDomain: "always-green.firebaseapp.com",
+        databaseURL: "https://always-green.firebaseio.com",
+        projectId: "always-green",
+        storageBucket: "always-green.appspot.com",
+        messagingSenderId: "485638168292"
+      };
+      firebase.initializeApp(config);
+    </script>
+  </head>
+
+  <body>
+    <h1> Always Green </h1>
+
+    <div id="summary">
+      REDDIT
+    </div>
+    <div class = "reddit-login">
+      <span> Login </span>
+    </div>
+  </body>
+  <footer>
+    <script src="javascripts/main.js"></script>
+  </footer>
+</html>

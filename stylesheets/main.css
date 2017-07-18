@@ -1,0 +1,38 @@
+body {
+  color: #b5e853;
+  padding: 0;
+  background: #151515 url("https://pages-themes.github.io/hacker/assets/images/bkg.png") 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  max-width: 800px;
+  margin: 0 auto;
+}
+body h1 {
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+body .github-login,
+body .github-logout {
+  margin-top: 20px;
+  border: 1px solid #fff;
+  border-radius: 15%;
+  padding: 7px 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+#summary {
+  margin-bottom: 20px;
+}
+#connected {
+  display: none;
+}
+#disconnected {
+  display: block;
+}
+html.logged-in #connected {
+  display: block;
+}
+html.logged-in #disconnected {
+  display: none;
+}

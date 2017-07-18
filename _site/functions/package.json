@@ -1,0 +1,12 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "btoa": "^1.1.2",
+    "firebase-admin": "~4.2.1",
+    "firebase-functions": "^0.5.7",
+    "raw.js": "^0.6.0",
+    "request": "^2.81.0"
+  },
+  "private": true
+}

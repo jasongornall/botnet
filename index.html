@@ -54,16 +54,17 @@
     <script src="libs/async.min.js"></script>
     <script src="libs/url.min.js"></script>
     <script src="libs/jquery.history.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script type="text/javascript">
+
       // Initialize Firebase
       var config = {
-        apiKey: "AIzaSyAo6YZNFNf0T3n_NtlZvz04NROyC06UIv0",
-        authDomain: "always-green.firebaseapp.com",
-        databaseURL: "https://always-green.firebaseio.com",
-        projectId: "always-green",
-        storageBucket: "always-green.appspot.com",
-        messagingSenderId: "485638168292"
+        apiKey: "AIzaSyCwTGrG6Z1pn7szC36l8u4g04y8tdGuSVs",
+        authDomain: "botnet-a2e6f.firebaseapp.com",
+        databaseURL: "https://botnet-a2e6f.firebaseio.com",
+        projectId: "botnet-a2e6f",
+        storageBucket: "botnet-a2e6f.appspot.com",
+        messagingSenderId: "208044036696"
       };
       firebase.initializeApp(config);
     </script>
@@ -78,8 +79,17 @@
     <div class = "reddit-login">
       <span> Login </span>
     </div>
+    <div id = 'user'> </div>
+    <div id = 'posts'>
+
+    </div>
   </body>
   <footer>
     <script src="javascripts/main.js"></script>
   </footer>
+
+
+
+  <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
+
 </html>

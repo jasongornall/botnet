@@ -55,7 +55,7 @@ $(window).load ->
                   div -> 'Please click logout and use a new account to process another link!'
             else
               div ->'Reddit Post: '
-              input placeholder: 'https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my', value: doc.child('post').val(), required: true, pattern: "^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+", title: 'should match this format \n \nhttps://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my'
+              input '.text', placeholder: 'https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my', value: doc.child('post').val(), required: true, pattern: "^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+", title: 'should match this format \n \nhttps://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my'
               input '.button', type: 'submit'
 
 

@@ -41,7 +41,7 @@ body #user form .post {
   padding: 10px;
   box-sizing: border-box;
 }
-body #user form .post input {
+body #user form .post input.text {
   width: 100%;
   padding: 5px;
   background: #151515;
@@ -50,19 +50,19 @@ body #user form .post input {
   box-sizing: border-box;
   margin-bottom: 15px;
 }
-body #user form .post input::-webkit-input-placeholder {
+body #user form .post input.text::-webkit-input-placeholder {
   color: #b5e853;
   opacity: 0.5;
 }
-body #user form .post input::-moz-placeholder {
+body #user form .post input.text::-moz-placeholder {
   color: #b5e853;
   opacity: 0.5;
 }
-body #user form .post input::-ms-input-placeholder {
+body #user form .post input.text::-ms-input-placeholder {
   color: #b5e853;
   opacity: 0.5;
 }
-body #user form .post input::-moz-placeholder {
+body #user form .post input.text::-moz-placeholder {
   color: #b5e853;
   opacity: 0.5;
 }

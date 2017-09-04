@@ -19,7 +19,7 @@ admin.initializeApp({
 exports.debug = functions.https.onRequest((req, res) => {
   var reddit = new rawjs("raw.js example script");
   reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
-  reddit.refreshToken = "22968586-_FSRyIpP8isyJdfn77ZK3mhGQoU"
+  reddit.refreshToken = "27647062451-j9cm1qRitB4nmXhdkXUAuCgjerg"
   // "https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my/"
   reddit.auth(function(err, response) {
     console.log(err,response);
@@ -29,7 +29,7 @@ exports.debug = functions.https.onRequest((req, res) => {
         "authorization": "Bearer " + response.access_token,
         "User-Agent": 'raw.js example script'
       },
-      url:  'https://oauth.reddit.com/by_id/t3_6xl52t'
+      url: 'https://oauth.reddit.com/by_id/t3_6xl52t'
     }, function(error, response, body) {
       console.log(error, body,response)
       res.send(body);
@@ -53,6 +53,8 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
         name = `t2_${parts[3]}`
       } else if (parts[2]) {
         name = `t3_${parts[2]}`
+      } else {
+        return Promise.reject('error occured')
       }
     } else {
       return Promise.reject('error occured')
@@ -84,11 +86,18 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
               "User-Agent": 'raw.js example script'
             },
             url:  `https://oauth.reddit.com/by_id/${name}`
-          }, function(error, response, body) {
-            if (err) {
+          }, function(error_post, response_post, body_post) {
+            if (error_post ) {
               return callback()
             }
-            if (body.data.children[0].data.likes === true) {
+
+            body_post = JSON.parse(body_post);
+            if (body_post.message == 'Forbidden' && body_post.error == 403) {
+              return snapshot.child(user_key).ref.remove().then(function() {
+                callback()
+              })
+            }
+            if (body_post.data.children[0].data.likes === true) {
               return callback()
             }
             request.post({

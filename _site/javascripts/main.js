@@ -95,7 +95,7 @@ $(window).load(function() {
               div(function() {
                 return 'Reddit Post: ';
               });
-              input({
+              input('.text', {
                 placeholder: 'https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my',
                 value: doc.child('post').val(),
                 required: true,

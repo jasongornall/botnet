@@ -19,12 +19,13 @@ $(window).load(function() {
     }
     window.logged_in_user = user;
     firebase.database().ref("posts").limitToLast(5).on('value', function(items) {
+      var arr;
+      arr = Object.values(items.val()).reverse();
       return $('#posts').html(teacup.render(function() {
-        var item, _i, _len, _ref, _results;
-        _ref = items.val();
+        var item, _i, _len, _results;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          item = _ref[_i];
+        for (_i = 0, _len = arr.length; _i < _len; _i++) {
+          item = arr[_i];
           _results.push(div('.post', function() {
             div('.upvotes', function() {
               span('.reddit-upvote');

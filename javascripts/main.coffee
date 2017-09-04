@@ -12,10 +12,10 @@ $(window).load ->
   firebase.auth().onAuthStateChanged (user) ->
     return unless user
     window.logged_in_user = user
-
     firebase.database().ref("posts").limitToLast(5).on 'value', (items) ->
+      arr = Object.values(items.val()).reverse()
       $('#posts').html teacup.render ->
-        for item in items.val()
+        for item in arr
           div '.post', ->
             div '.upvotes', ->
               span '.reddit-upvote'

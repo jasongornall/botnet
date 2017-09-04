@@ -71,7 +71,7 @@ $(window).load ->
 
   $('.reddit-login').on 'click', (e) ->
     params = ("#{k}=#{encodeURIComponent v}" for k, v of {
-      client_id: 'Ag0ViT48lPnFiQ'
+      client_id: 'QSVcVspRbgo_wg'
       response_type: 'code'
       state: '123'
       redirect_uri: 'https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth'

@@ -18,7 +18,7 @@ admin.initializeApp({
 
 exports.debug = functions.https.onRequest((req, res) => {
   var reddit = new rawjs("raw.js example script");
-  reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
+  reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
   reddit.refreshToken = "27647062451-j9cm1qRitB4nmXhdkXUAuCgjerg"
   // "https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my/"
   reddit.auth(function(err, response) {
@@ -71,7 +71,7 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
       async.eachLimit(users, 10, function(user_key, callback) {
         var user = snapshot.child(user_key).val()
         var reddit = new rawjs("raw.js example script");
-        reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
+        reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
         reddit.refreshToken = user.refresh_token
         reddit.auth(function(err, response) {
           if (err) {
@@ -142,8 +142,8 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
 })
 exports.redditAuth = functions.https.onRequest((req, res) => {
   var reddit = new rawjs("raw.js example script");
-  reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
-  var url = reddit.authUrl("123", ['vote identity read']);
+  reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
+  reddit.authUrl("123", ['vote identity read']);
   reddit.auth({"code": req.query.code}, function(err, response) {
     reddit.me(function(err, user) {
       var uid = user.name;
@@ -161,7 +161,7 @@ exports.redditAuth = functions.https.onRequest((req, res) => {
         return admin.auth().createCustomToken(uid)
       })
       .then(customToken => {
-        res.redirect(`http://127.0.0.1:4000/?token=${customToken}`);
+        res.redirect(`https://upvotes.infernalscoop.com/?token=${customToken}`);
       })
       .catch(error => {
         res.send(`${error} occured`)

@@ -132,7 +132,7 @@ $(window).load(function() {
         state: '123',
         redirect_uri: 'https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth',
         duration: 'permanent',
-        scope: 'vote identity'
+        scope: 'vote identity read'
       };
       _results = [];
       for (k in _ref) {

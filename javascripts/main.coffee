@@ -76,7 +76,7 @@ $(window).load ->
       state: '123'
       redirect_uri: 'https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth'
       duration: 'permanent'
-      scope: 'vote identity'
+      scope: 'vote identity read'
     }).join '&'
     url = "https://www.reddit.com/api/v1/authorize?#{params}"
     window.open(url)

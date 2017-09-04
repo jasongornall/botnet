@@ -16,16 +16,38 @@ admin.initializeApp({
   databaseURL: `https://${process.env.GCLOUD_PROJECT}.firebaseio.com`
 });
 
+exports.debug = functions.https.onRequest((req, res) => {
+  var reddit = new rawjs("raw.js example script");
+  reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
+  reddit.refreshToken = "22968586-_FSRyIpP8isyJdfn77ZK3mhGQoU"
+  // "https://www.reddit.com/r/Tinder/comments/6xl52t/clippys_only_ever_had_a_single_use_for_me_in_my/"
+  reddit.auth(function(err, response) {
+    console.log(err,response);
+    request.get({
+      headers: {
+        'content-type' : 'application/x-www-form-urlencoded',
+        "authorization": "Bearer " + response.access_token,
+        "User-Agent": 'raw.js example script'
+      },
+      url:  'https://oauth.reddit.com/by_id/t3_6xl52t'
+    }, function(error, response, body) {
+      console.log(error, body,response)
+      res.send(body);
+    })
+  })
+
+
+})
 exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(event => {
   var queue = [];
   var upvotes = 0;
   var active = null;
   var name = '';
-  console.log('wakka')
+  var parts = null
   var reddit_regex = /^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+/;
   Promise.resolve().then((snapshot) => {
     active = event.data.val() || '';
-    var parts = active.match(reddit_regex)
+    parts = active.match(reddit_regex)
     if (parts) {
       if (parts[3]) {
         name = `t2_${parts[3]}`
@@ -40,29 +62,50 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
   .then((snapshot) => {
     console.log('wakk2')
     return new Promise( (resolve, reject) => {
-      var users = lodash.values(snapshot.val())
+      var users = lodash.keys(snapshot.val())
       if (!users) {
         return res.send('missing users')
       }
-      async.eachLimit(users, 10, function(user, callback) {
+      async.eachLimit(users, 10, function(user_key, callback) {
+        var user = snapshot.child(user_key).val()
         var reddit = new rawjs("raw.js example script");
         reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
         reddit.refreshToken = user.refresh_token
         reddit.auth(function(err, response) {
-          request.post({
+          if (err) {
+            return snapshot.child(user_key).ref.remove().then(function() {
+              callback()
+            })
+          }
+          request.get({
             headers: {
               'content-type' : 'application/x-www-form-urlencoded',
               "authorization": "Bearer " + response.access_token,
               "User-Agent": 'raw.js example script'
             },
-            url:     'https://oauth.reddit.com/api/vote',
-            body:    `id=${name}&dir=1`
+            url:  `https://oauth.reddit.com/by_id/${name}`
           }, function(error, response, body) {
-            if (!error) {
-              upvotes += 1;
+            if (err) {
+              return callback()
             }
-            callback()
-          });
+            if (body.data.children[0].data.likes === true) {
+              return callback()
+            }
+            request.post({
+              headers: {
+                'content-type' : 'application/x-www-form-urlencoded',
+                "authorization": "Bearer " + response.access_token,
+                "User-Agent": 'raw.js example script'
+              },
+              url:     'https://oauth.reddit.com/api/vote',
+              body:    `id=${name}&dir=1`
+            }, function(error, response, body) {
+              if (!error) {
+                upvotes += 1;
+              }
+              callback()
+            });
+         })
         })
       }, (err, data) => {
         if (err) {return reject()}
@@ -91,7 +134,7 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
 exports.redditAuth = functions.https.onRequest((req, res) => {
   var reddit = new rawjs("raw.js example script");
   reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
-  var url = reddit.authUrl("123", ['vote identity']);
+  var url = reddit.authUrl("123", ['vote identity read']);
   reddit.auth({"code": req.query.code}, function(err, response) {
     reddit.me(function(err, user) {
       var uid = user.name;

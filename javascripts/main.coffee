@@ -13,17 +13,18 @@ $(window).load ->
     return unless user
     window.logged_in_user = user
 
-    firebase.database().ref("posts").limitToLast(5).on 'child_added', (item) ->
-      $('#posts').prepend teacup.render ->
-        div '.post', ->
-          div '.upvotes', ->
-            span '.reddit-upvote'
-            span '.reddit-upvote'
-            span -> "#{item.child('upvotes').val()} upvotes"
-            span '.reddit-upvote'
-            span '.reddit-upvote'
-          blockquote ".reddit-card", 'data-card-preview': '0', 'data-card-created':"1504484075", ->
-            a href: "#{item.child('url').val()}/?ref=share&ref_source=embed"
+    firebase.database().ref("posts").limitToLast(5).on 'value', (items) ->
+      $('#posts').html teacup.render ->
+        for item in items.val()
+          div '.post', ->
+            div '.upvotes', ->
+              span '.reddit-upvote'
+              span '.reddit-upvote'
+              span -> "#{item.upvotes} upvotes"
+              span '.reddit-upvote'
+              span '.reddit-upvote'
+            blockquote ".reddit-card", 'data-card-preview': '0', 'data-card-created':"", ->
+              a href: "#{item.url}/?ref=share&ref_source=embed"
 
     firebase.database().ref("users/#{user.uid}").on 'value', (doc) ->
       return handleLogout() if not doc.val()

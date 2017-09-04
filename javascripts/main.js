@@ -18,27 +18,34 @@ $(window).load(function() {
       return;
     }
     window.logged_in_user = user;
-    firebase.database().ref("posts").limitToLast(5).on('child_added', function(item) {
-      return $('#posts').prepend(teacup.render(function() {
-        return div('.post', function() {
-          div('.upvotes', function() {
-            span('.reddit-upvote');
-            span('.reddit-upvote');
-            span(function() {
-              return "" + (item.child('upvotes').val()) + " upvotes";
+    firebase.database().ref("posts").limitToLast(5).on('value', function(items) {
+      return $('#posts').html(teacup.render(function() {
+        var item, _i, _len, _ref, _results;
+        _ref = items.val();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          _results.push(div('.post', function() {
+            div('.upvotes', function() {
+              span('.reddit-upvote');
+              span('.reddit-upvote');
+              span(function() {
+                return "" + item.upvotes + " upvotes";
+              });
+              span('.reddit-upvote');
+              return span('.reddit-upvote');
             });
-            span('.reddit-upvote');
-            return span('.reddit-upvote');
-          });
-          return blockquote(".reddit-card", {
-            'data-card-preview': '0',
-            'data-card-created': "1504484075"
-          }, function() {
-            return a({
-              href: "" + (item.child('url').val()) + "/?ref=share&ref_source=embed"
+            return blockquote(".reddit-card", {
+              'data-card-preview': '0',
+              'data-card-created': ""
+            }, function() {
+              return a({
+                href: "" + item.url + "/?ref=share&ref_source=embed"
+              });
             });
-          });
-        });
+          }));
+        }
+        return _results;
       }));
     });
     return firebase.database().ref("users/" + user.uid).on('value', function(doc) {

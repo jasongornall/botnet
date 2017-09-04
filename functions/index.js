@@ -142,9 +142,11 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
 })
 exports.redditAuth = functions.https.onRequest((req, res) => {
   var reddit = new rawjs("raw.js example script");
+  console.log(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect)
   reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
-  reddit.authUrl("123", ['vote identity read']);
+  var url = reddit.authUrl("123", ['vote identity read']);
   reddit.auth({"code": req.query.code}, function(err, response) {
+    console.log(err, response);
     reddit.me(function(err, user) {
       var uid = user.name;
       var refresh_token = response.refresh_token;

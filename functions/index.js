@@ -16,32 +16,34 @@ admin.initializeApp({
   databaseURL: `https://${process.env.GCLOUD_PROJECT}.firebaseio.com`
 });
 
-exports.debug = functions.https.onRequest((req, res) => {
-  res.send('hi');
-});
-
-exports.processQueue = functions.https.onRequest((req, res)=> {
-  console.log('start');
+exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(event => {
   var queue = [];
   var upvotes = 0;
   var active = null;
   var name = '';
-  var reddit_regex = /^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+?\/(.*?)/;
-  admin.database().ref('/queue').limitToFirst(1).once('child_added')
-  .then((snapshot) => {
-    active = snapshot.val()
-    var parts = active.post.match(reddit_regex)
+  console.log('wakka')
+  var reddit_regex = /^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+/;
+  Promise.resolve().then((snapshot) => {
+    active = event.data.val() || '';
+    var parts = active.match(reddit_regex)
     if (parts) {
-      name = `t2_${parts[3]}` || `t3_${parts[2]}`
+      if (parts[3]) {
+        name = `t2_${parts[3]}`
+      } else if (parts[2]) {
+        name = `t3_${parts[2]}`
+      }
+    } else {
+      return Promise.reject('error occured')
     }
-    return snapshot.ref.remove()
-  })
-  .then((snapshot) => {
     return admin.database().ref('/users').once('value')
   })
   .then((snapshot) => {
+    console.log('wakk2')
     return new Promise( (resolve, reject) => {
       var users = lodash.values(snapshot.val())
+      if (!users) {
+        return res.send('missing users')
+      }
       async.eachLimit(users, 10, function(user, callback) {
         var reddit = new rawjs("raw.js example script");
         reddit.setupOAuth2("Ag0ViT48lPnFiQ", "BZPiwonkM5uGdlRK9dfdCz7St6M", "https://us-central1-botnet-a2e6f.cloudfunctions.net/redditAuth");
@@ -56,8 +58,10 @@ exports.processQueue = functions.https.onRequest((req, res)=> {
             url:     'https://oauth.reddit.com/api/vote',
             body:    `id=${name}&dir=1`
           }, function(error, response, body) {
-            upvotes += 1;
-            callback(null)
+            if (!error) {
+              upvotes += 1;
+            }
+            callback()
           });
         })
       }, (err, data) => {
@@ -67,16 +71,21 @@ exports.processQueue = functions.https.onRequest((req, res)=> {
     })
   })
   .then((a,b) => {
+    console.log('wakka3')
     return admin.database().ref('/posts').push({
       url: active,
       upvotes: upvotes
     })
   })
-  .then((snapshot) => {
-    res.send('ok');
+  .then(() => {
+    console.log('wakka4')
+    return event.data.adminRef.parent.once('value')
   })
-  .catch(error => {
-    res.send(`${error} occured`)
+  .then((snapshot) => {
+    var current = snapshot.val()
+    current.status = 'processed'
+    current.upvotes = upvotes
+    return snapshot.ref.set(current)
   })
 })
 exports.redditAuth = functions.https.onRequest((req, res) => {
@@ -89,22 +98,22 @@ exports.redditAuth = functions.https.onRequest((req, res) => {
       var refresh_token = response.refresh_token;
       var access_token = response.access_token;
 
-
-      return admin.database().ref(`/users/${uid}`).set({
-        refresh_token: refresh_token,
-        access_token: access_token
+      return admin.database().ref(`/users/${uid}`).once('value')
+      .then((snapshot) => {
+        current_user = snapshot.val() || {}
+        current_user.refresh_token = refresh_token
+        current_user.access_token = access_token
+        return admin.database().ref(`/users/${uid}`).set(current_user)
       })
       .then(() => {
         return admin.auth().createCustomToken(uid)
       })
-
       .then(customToken => {
         res.redirect(`http://127.0.0.1:4000/?token=${customToken}`);
       })
       .catch(error => {
         res.send(`${error} occured`)
       })
-       res.send('hi');
     })
   })
 });

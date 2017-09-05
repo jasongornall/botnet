@@ -95,6 +95,11 @@ $(window).load(function() {
                   div(function() {
                     return 'Post is now processed! you got ' + doc.child('upvotes').val() + ' free upvotes';
                   });
+                  if (doc.child('upvotes').val() >= 50) {
+                    div(function() {
+                      return 'You hit the maximum upvotes per account! You may still have more you can claim.';
+                    });
+                  }
                   return div(function() {
                     return 'Please click logout and use a new account to process another link!';
                   });

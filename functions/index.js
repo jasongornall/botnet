@@ -62,15 +62,18 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
     return admin.database().ref('/users').once('value')
   })
   .then((snapshot) => {
-    console.log('wakk2')
     return new Promise( (resolve, reject) => {
-      var users = lodash.keys(snapshot.val())
+      var users = lodash.shuffle(lodash.keys(snapshot.val()))
       if (!users) {
         return res.send('missing users')
       }
       async.eachLimit(users, 10, function(user_key, callback) {
         var user = snapshot.child(user_key).val()
         var reddit = new rawjs("raw.js example script");
+
+        if (upvotes >= 50) {
+          return callback()
+        }
         reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
         reddit.refreshToken = user.refresh_token
         reddit.auth(function(err, response) {
@@ -129,8 +132,12 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
       upvotes: upvotes
     })
   })
+  .then((snap) => {
+    return admin.database().ref(`/stats/upvotes`).transaction(function(current) {
+      return (current || 0) + upvotes
+    });
+  })
   .then(() => {
-    console.log('wakka4')
     return event.data.adminRef.parent.once('value')
   })
   .then((snapshot) => {
@@ -158,6 +165,13 @@ exports.redditAuth = functions.https.onRequest((req, res) => {
         current_user.refresh_token = refresh_token
         current_user.access_token = access_token
         return admin.database().ref(`/users/${uid}`).set(current_user)
+      })
+      .then((snap) => {
+        return admin.database().ref(`/users`).once('value')
+      })
+      .then((snap) => {
+        var users = lodash.keys(snap.val())
+        return admin.database().ref(`/stats/users`).set(users)
       })
       .then(() => {
         return admin.auth().createCustomToken(uid)

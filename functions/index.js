@@ -45,7 +45,7 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
   var name = '';
   var parts = null
   var reddit_regex = /^https:\/\/www\.reddit\.com\/r\/(.+?)\/comments\/(.+?)\/.+/;
-  Promise.resolve().then((snapshot) => {
+  return Promise.resolve().then((snapshot) => {
     active = event.data.val() || '';
     parts = active.match(reddit_regex)
     if (parts) {

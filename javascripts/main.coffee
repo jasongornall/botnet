@@ -12,6 +12,10 @@ $(window).load ->
   firebase.auth().onAuthStateChanged (user) ->
     return unless user
     window.logged_in_user = user
+    firebase.database().ref("stats").on 'value', (stats) ->
+      $('#stats').html teacup.render ->
+        span -> "voting users: #{stats.child('users').val()}"
+        span -> "votes cast: #{stats.child('upvotes').val()}"
     firebase.database().ref("posts").limitToLast(5).on 'value', (items) ->
       arr = Object.values(items.val()).reverse()
       $('#posts').html teacup.render ->
@@ -54,7 +58,7 @@ $(window).load ->
                   div -> 'status: ' + status
                   div -> 'Post is now processed! you got ' + doc.child('upvotes').val() + ' free upvotes'
                   if doc.child('upvotes').val() >= 50
-                    div -> 'You hit the maximum upvotes per account! You may still have more you can claim.'
+                    div '.warn', -> 'You hit the maximum upvotes per account! You may still have more you can claim.'
                   div -> 'Please click logout and use a new account to process another link!'
             else
               div ->'Reddit Post: '

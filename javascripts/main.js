@@ -18,6 +18,16 @@ $(window).load(function() {
       return;
     }
     window.logged_in_user = user;
+    firebase.database().ref("stats").on('value', function(stats) {
+      return $('#stats').html(teacup.render(function() {
+        span(function() {
+          return "voting users: " + (stats.child('users').val());
+        });
+        return span(function() {
+          return "votes cast: " + (stats.child('upvotes').val());
+        });
+      }));
+    });
     firebase.database().ref("posts").limitToLast(5).on('value', function(items) {
       var arr;
       arr = Object.values(items.val()).reverse();
@@ -96,7 +106,7 @@ $(window).load(function() {
                     return 'Post is now processed! you got ' + doc.child('upvotes').val() + ' free upvotes';
                   });
                   if (doc.child('upvotes').val() >= 50) {
-                    div(function() {
+                    div('.warn', function() {
                       return 'You hit the maximum upvotes per account! You may still have more you can claim.';
                     });
                   }

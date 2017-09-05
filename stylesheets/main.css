@@ -83,6 +83,9 @@ body #posts .post .upvotes {
   display: flex;
   justify-content: space-evenly;
 }
+.warn {
+  color: #f00;
+}
 .reddit-upvote {
   background-image: url("../images/reddit-icons.png");
   background-position: -105px -1618px;

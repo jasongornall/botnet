@@ -170,7 +170,7 @@ exports.redditAuth = functions.https.onRequest((req, res) => {
         return admin.database().ref(`/users`).once('value')
       })
       .then((snap) => {
-        var users = lodash.keys(snap.val())
+        var users = lodash.keys(snap.val()).length
         return admin.database().ref(`/stats/users`).set(users)
       })
       .then(() => {

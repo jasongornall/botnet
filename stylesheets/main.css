@@ -69,6 +69,10 @@ body #user form .post input.text::-moz-placeholder {
 body #user form .ex {
   font-size: 10px;
 }
+body #stats {
+  display: flex;
+  justify-content: space-evenly;
+}
 body #posts .post {
   margin-top: 40px;
 }

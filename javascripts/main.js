@@ -14,9 +14,6 @@ $(window).load(function() {
     updateQueryStringParam('token');
   }
   firebase.auth().onAuthStateChanged(function(user) {
-    if (!user) {
-      return;
-    }
     window.logged_in_user = user;
     firebase.database().ref("stats").on('value', function(stats) {
       return $('#stats').html(teacup.render(function() {

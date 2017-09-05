@@ -10,7 +10,7 @@ $(window).load ->
     updateQueryStringParam 'token'
 
   firebase.auth().onAuthStateChanged (user) ->
-    return unless user
+    # return unless user
     window.logged_in_user = user
     firebase.database().ref("stats").on 'value', (stats) ->
       $('#stats').html teacup.render ->

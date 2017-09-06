@@ -109,7 +109,8 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
               url:     'https://oauth.reddit.com/api/vote',
               body:    `id=${name}&dir=1`
             }, function(error, response, body) {
-              if (body_post.message == 'Forbidden' && body_post.error == 403) {
+              body = JSON.parse(body);
+              if (body.message == 'Forbidden' && body.error == 403) {
                 return snapshot.child(user_key).ref.remove().then(function() {
                   callback()
                 })

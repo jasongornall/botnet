@@ -25,6 +25,10 @@ body #summary {
   box-sizing: border-box;
   margin-bottom: 20px;
 }
+body #summary u {
+  color: #f00;
+  animation: blinker 5s linear infinite;
+}
 body #user {
   text-align: left;
 }
@@ -101,4 +105,24 @@ body #posts .post .upvotes {
   height: 14px;
   margin: 2px 0 0 0;
   display: inline-block;
+}
+@-moz-keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+@-o-keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

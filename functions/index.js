@@ -71,9 +71,6 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
         var user = snapshot.child(user_key).val()
         var reddit = new rawjs("raw.js example script");
 
-        if (upvotes >= 50) {
-          return callback()
-        }
         reddit.setupOAuth2(functions.config().app.client, functions.config().app.secret, functions.config().app.redirect);
         reddit.refreshToken = user.refresh_token
         reddit.auth(function(err, response) {

@@ -112,6 +112,11 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
               url:     'https://oauth.reddit.com/api/vote',
               body:    `id=${name}&dir=1`
             }, function(error, response, body) {
+              if (body_post.message == 'Forbidden' && body_post.error == 403) {
+                return snapshot.child(user_key).ref.remove().then(function() {
+                  callback()
+                })
+              }
               if (!error) {
                 upvotes += 1;
               }
@@ -145,6 +150,13 @@ exports.processDBQueue = functions.database.ref('/users/{uid}/post').onWrite(eve
     current.status = 'processed'
     current.upvotes = upvotes
     return snapshot.ref.set(current)
+  })
+  .then((snap) => {
+    return admin.database().ref(`/users`).once('value')
+  })
+  .then((snap) => {
+    var users = lodash.keys(snap.val()).length
+    return admin.database().ref(`/stats/users`).set(users)
   })
 })
 exports.redditAuth = functions.https.onRequest((req, res) => {
